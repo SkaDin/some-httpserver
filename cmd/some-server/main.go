@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
+	"some-httpserver/internal/app"
+	"some-httpserver/internal/cfg"
 )
 
 func main() {
@@ -12,11 +14,11 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
-	ch := make(chan os.Signal, 1)
+	ch := make(chan os.Signal, 1) //grace full shutdown
 
-	signal.Notify(c, os.Interrupt)
+	signal.Notify(ch, os.Interrupt)
 
-	server := app.NewServer(ctx, config)
+	server := app.NewServer(*config, ctx)
 
 	go func() {
 		osCall := <-ch
