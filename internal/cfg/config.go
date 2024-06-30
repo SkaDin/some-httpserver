@@ -37,5 +37,12 @@ func LoadAndStoreConfig() *Config {
 }
 
 func (cfg *Config) GetDBString() string {
-	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", cfg.DbUser, cfg.DbPass, cfg.DbHost, cfg.DbPort, cfg.DbName)
+	return fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s",
+		cfg.DbUser,
+		cfg.DbPass,
+		cfg.DbHost,
+		cfg.DbPort,
+		cfg.DbName,
+	)
 }
