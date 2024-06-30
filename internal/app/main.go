@@ -23,9 +23,11 @@ type Server struct {
 }
 
 func NewServer(config cfg.Config, ctx context.Context) *Server {
-	server := &Server{}
-	server.ctx = ctx
-	server.config = config
+	server := &Server{
+		config: config,
+		ctx:    ctx,
+	}
+
 	return server
 }
 
@@ -50,7 +52,7 @@ func (s *Server) Serve() {
 	routes.Use(middleware.RequestLog)
 
 	s.srv = &http.Server{
-		Addr:    ":" + s.config.DbPort,
+		Addr:    ":" + s.config.Port,
 		Handler: routes,
 	}
 	log.Println("Server started")
