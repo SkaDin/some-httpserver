@@ -22,7 +22,6 @@ func LoadAndStoreConfig() *Config {
 	v.SetDefault("DBUSER", "test")
 	v.SetDefault("DBPASS", "test")
 	v.SetDefault("DBHOST", "localhost")
-	v.SetDefault("DBPORT", "5432")
 	v.SetDefault("DBNAME", "testDB")
 	v.AutomaticEnv()
 

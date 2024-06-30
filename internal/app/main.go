@@ -3,9 +3,14 @@ package app
 import (
 	"context"
 	"errors"
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v4/pgxpool"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"some-httpserver/api"
+	"some-httpserver/api/middleware"
+	"some-httpserver/internal/app/db"
+	"some-httpserver/internal/app/handlers"
+	"some-httpserver/internal/app/processor"
 	"some-httpserver/internal/cfg"
 	"time"
 )
@@ -27,22 +32,22 @@ func NewServer(config cfg.Config, ctx context.Context) *Server {
 func (s *Server) Serve() {
 	log.Printf("Starting server")
 	var err error
-	s.db, err = pgxpool.New(s.ctx, s.config.GetDBString())
+	s.db, err = pgxpool.Connect(s.ctx, s.config.GetDBString())
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	carStorage := db3.NewCarStorage(s.db)
-	userStorage := db3.NewUserStorage(s.db)
+	carStorage := db.NewCarsStorage(s.db)
+	userStorage := db.NewUsersStorage(s.db)
 
-	carsProcessor := processors.NewCarsProcessor(carStorage)
-	userProcessor := processor.NewUserProcessor(userStorage)
+	carsProcessor := processor.NewCarsProcessor(carStorage)
+	userProcessor := processor.NewUsersProcessor(userStorage)
 
-	carsHandler := handlers.NewCarHandler(carsProcessor)
-	userHandler := handlers.NewUserHandler(userProcessor)
+	carsHandler := handlers.NewCarsHandler(carsProcessor)
+	userHandler := handlers.NewUsersHandler(userProcessor)
 
 	routes := api.CreateRoutes(userHandler, carsHandler)
-	rotues.Use(middleware.RequestLog)
+	routes.Use(middleware.RequestLog)
 
 	s.srv = &http.Server{
 		Addr:    ":" + s.config.DbPort,

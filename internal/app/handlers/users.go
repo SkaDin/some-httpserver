@@ -5,15 +5,17 @@ import (
 	"errors"
 	"github.com/gorilla/mux"
 	"net/http"
+	"some-httpserver/internal/app/models"
+	"some-httpserver/internal/app/processor"
 	"strconv"
 	"strings"
 )
 
 type UserHandler struct {
-	processor *processors.UsersProcessor
+	processor *processor.UsersProcessor
 }
 
-func NewUsersHandler(processor *processors.UsersProcessors) *UserHandler {
+func NewUsersHandler(processor *processor.UsersProcessor) *UserHandler {
 	handler := &UserHandler{
 		processor: processor,
 	}
@@ -70,7 +72,7 @@ func (handler *UserHandler) Find(w http.ResponseWriter, r *http.Request) {
 		WrapError(w, errors.New("missing id"))
 		return
 	}
-	id, err := strconv.ParseInt(vars["id"], 10, 64)
+	id, err := strconv.ParseUint(vars["id"], 10, 64)
 	if err != nil {
 		WrapError(w, err)
 		return

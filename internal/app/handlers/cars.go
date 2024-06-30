@@ -5,22 +5,24 @@ import (
 	"errors"
 	"github.com/gorilla/mux"
 	"net/http"
+	"some-httpserver/internal/app/models"
+	"some-httpserver/internal/app/processor"
 	"strconv"
 	"strings"
 )
 
 type CarsHandler struct {
-	processor *processors.CarsProcessor
+	processor *processor.CarsProcessor
 }
 
-func NewCarsHandler(processor *processors.CarsProcessor) *CarsHandler {
+func NewCarsHandler(processor *processor.CarsProcessor) *CarsHandler {
 	handler := &CarsHandler{
 		processor: processor,
 	}
 	return handler
 }
 
-func (handler *CarsHandler) Create(w http.ResponseWriter, r *http.Response) {
+func (handler *CarsHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var newCar models.Car
 
 	err := json.NewDecoder(r.Body).Decode(&newCar)
@@ -47,11 +49,11 @@ func (handler *CarsHandler) Create(w http.ResponseWriter, r *http.Response) {
 func (handler *CarsHandler) List(w http.ResponseWriter, r *http.Request) {
 	vars := r.URL.Query()
 
-	var userIdFilter int64 = 0
+	var userIdFilter uint64 = 0
 
 	if vars.Get("userid") != "" {
 		var err error
-		userIdFilter, err = strconv.ParseInt(vars.Get("userid"), 10, 64)
+		userIdFilter, err = strconv.ParseUint(vars.Get("userid"), 10, 64)
 		if err != nil {
 			WrapError(w, err)
 			return
@@ -61,7 +63,7 @@ func (handler *CarsHandler) List(w http.ResponseWriter, r *http.Request) {
 		userIdFilter,
 		strings.Trim(vars.Get("brand"), "\""),
 		strings.Trim(vars.Get("colour"), "\""),
-		strings.Trim(vars.Get("license"), "\""),
+		strings.Trim(vars.Get("licence_plate"), "\""),
 	)
 	if err != nil {
 		WrapError(w, err)
@@ -82,7 +84,7 @@ func (handler *CarsHandler) Find(w http.ResponseWriter, r *http.Request) {
 		WrapError(w, errors.New("missing id"))
 		return
 	}
-	id, err := strconv.ParseInt(vars["id"], 10, 64)
+	id, err := strconv.ParseUint(vars["id"], 10, 64)
 	if err != nil {
 		WrapError(w, err)
 		return

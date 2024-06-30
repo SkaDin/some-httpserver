@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
+	"some-httpserver/internal/app"
 	"some-httpserver/internal/cfg"
 )
 
@@ -17,7 +18,7 @@ func main() {
 
 	signal.Notify(ch, os.Interrupt)
 
-	server := app.NewServer(ctx, config)
+	server := app.NewServer(*config, ctx)
 
 	go func() {
 		osCall := <-ch

@@ -1,8 +1,11 @@
 package api
 
-import "github.com/gorilla/mux"
+import (
+	"github.com/gorilla/mux"
+	"some-httpserver/internal/app/handlers"
+)
 
-func CreateRoutes(userHandler *handlers.UsersHandler, carsHandler *handlers.CarHandler) *mux.Router {
+func CreateRoutes(userHandler *handlers.UserHandler, carsHandler *handlers.CarsHandler) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/users/create", userHandler.Create).Methods("POST")
 	r.HandleFunc("/users/list", userHandler.List).Methods("GET")
