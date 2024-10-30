@@ -32,11 +32,12 @@ go mod tidy
 ```
 
 **Запуск приложения:**
-```bash docker-compose up build
+```bash
+   docker-compose up build
 ```
 **Настроить перменные окружения GOOSE:**
 ```bash export GOOSE_DRIVER=postgres
-export GOOSE_DBSTRING=postgresql://test:test@localhost:5432/testDB?sslmode=disable
+   export GOOSE_DBSTRING=postgresql://test:test@localhost:5432/testDB?sslmode=disable
 ```
 **Запуск GOOSE:**
 ```bash
